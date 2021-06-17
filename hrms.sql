@@ -113,6 +113,9 @@ CREATE TABLE public.job_advertisements
     number_of_open_position integer NOT NULL,
     description text NOT NULL,
     is_activate boolean NOT NULL,
+    is_deleted boolean NOT NULL,
+    working_time_id integer NOT NULL,
+    way_of_working_id integer NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -195,6 +198,20 @@ CREATE TABLE public.verification_codes
     code character varying(38) NOT NULL,
     is_verified boolean NOT NULL,
     user_id integer,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.way_of_workings
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    way_of_working_name character varying(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.working_times
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    working_time_name character varying(50) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -292,6 +309,18 @@ ALTER TABLE public.job_advertisements
 ALTER TABLE public.job_advertisements
     ADD FOREIGN KEY (job_position_id)
     REFERENCES public.job_positions (id)
+    NOT VALID;
+
+
+ALTER TABLE public.job_advertisements
+    ADD FOREIGN KEY (way_of_working_id)
+    REFERENCES public.way_of_workings (id)
+    NOT VALID;
+
+
+ALTER TABLE public.job_advertisements
+    ADD FOREIGN KEY (working_time_id)
+    REFERENCES public.working_times (id)
     NOT VALID;
 
 
