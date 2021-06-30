@@ -38,7 +38,7 @@ CREATE TABLE public.candidate_school_with_departmans
 
 CREATE TABLE public.candidates
 (
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 0 MAXVALUE 2147483647 CACHE 1 ),
+    id integer NOT NULL,
     first_name character varying(35) NOT NULL,
     last_name character varying(35) NOT NULL,
     identification_number character varying(11) NOT NULL,
@@ -91,12 +91,29 @@ CREATE TABLE public.employees
     PRIMARY KEY (id)
 );
 
+CREATE TABLE public.employer_updates
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    changes json NOT NULL,
+    employer_id integer NOT NULL,
+    is_approved boolean NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE public.employers
 (
     id integer NOT NULL,
     company_name character varying(255) NOT NULL,
     web_address character varying(255) NOT NULL,
     phone_number character varying,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE public.favorites
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    candidate_id integer NOT NULL,
+    job_advertisement_id integer NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -288,9 +305,27 @@ ALTER TABLE public.employees
     NOT VALID;
 
 
+ALTER TABLE public.employer_updates
+    ADD FOREIGN KEY (employer_id)
+    REFERENCES public.employers (id)
+    NOT VALID;
+
+
 ALTER TABLE public.employers
     ADD FOREIGN KEY (id)
     REFERENCES public.users (id)
+    NOT VALID;
+
+
+ALTER TABLE public.favorites
+    ADD FOREIGN KEY (candidate_id)
+    REFERENCES public.candidates (id)
+    NOT VALID;
+
+
+ALTER TABLE public.favorites
+    ADD FOREIGN KEY (job_advertisement_id)
+    REFERENCES public.job_advertisements (id)
     NOT VALID;
 
 
